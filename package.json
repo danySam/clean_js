@@ -1,0 +1,21 @@
+{
+  "name": "clean_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "dependencies": {
+    "chai": "^4.3.4",
+    "eslint-plugin-mocha": "^8.1.0",
+    "mocha": "^8.3.2"
+  }
+}
