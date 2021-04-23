@@ -16,6 +16,7 @@
   "dependencies": {
     "chai": "^4.3.4",
     "eslint-plugin-mocha": "^8.1.0",
+    "lodash": "^4.17.21",
     "mocha": "^8.3.2"
   }
 }
