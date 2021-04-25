@@ -457,6 +457,131 @@ function getCashback() {
 - Adding code is easy
 - Readability and maintainability is very difficult
 
+Bad
+
+- Adds cost to your code
+- Readability decreases
+- Refactorability decreases
+
+```js
+async function sendSomeData(oldLoan, newLoan, newscheme) {
+  const loan = {
+    loan: newLoan,
+    uloans: oldLoan.uloans,
+    newamount: newLoan.newunsecureamount,
+    oldamount: newLoan.oldunsecureamount,
+    oldlploanid: newLoan.lploanid,
+    oldscheme: newLoan.oldschemeid,
+    newscheme: newLoan.newschemeid,
+    newschemeobj: newscheme,
+    pledgecardimage: newLoan.pledgecard,
+    repledgedate: newLoan.newloandate,
+    urepledgehistory: oldLoan.urepledgehistory,
+    ...(oldLoan.netWeight > 0 && {
+      uLoanIds: oldLoan.uLoanIds,
+      unSecureScheme: oldLoan.scheme,
+    }),
+    renewalobj: {
+      ...(newLoan.printerpledgecardimage && {
+        combinedpledgecardimage: newLoan.printerpledgecardimage,
+      }),
+      ...(newLoan.renewalpledgecard && {
+        renewalpledgecard: newLoan.renewalpledgecard,
+      }),
+      ...(newLoan.signedpledgecard && {
+        signedpledgecard: newLoan.signedpledgecard,
+      }),
+    },
+  };
+
+  await LoanService.update(loan);
+}
+```
+
+```js
+const array1 = [1, 2, 3, 4];
+const array2 = [5, 6, 7, 8];
+const array3 = [...array1, ...array2];
+
+const obj1 = { a: 1, b: 2, c: 3 };
+const obj2 = { d: 4, e: 5, a: 6 };
+const obj3 = { ...obj1, ...obj2 };
+
+function pick(...keys) {
+  // pick and return
+}
+
+const keys = ['id', 'netweight'];
+const data = pick(...keys);
+```
+
+Little Better
+
+```js
+function buildLoanUpdateRequest(oldLoan, newLoan, newscheme) {
+  return {
+    loan: newLoan,
+    uloans: oldLoan.uloans,
+    newamount: newLoan.newunsecureamount,
+    oldamount: newLoan.oldunsecureamount,
+    oldlploanid: newLoan.lploanid,
+    oldscheme: newLoan.oldschemeid,
+    newscheme: newLoan.newschemeid,
+    newschemeobj: newscheme,
+    pledgecardimage: newLoan.pledgecard,
+    repledgedate: newLoan.newloandate,
+    urepledgehistory: oldLoan.urepledgehistory,
+    ...(oldLoan.netWeight > 0 && {
+      uLoanIds: oldLoan.uLoanIds,
+      unSecureScheme: oldLoan.scheme,
+    })
+  };
+}
+
+async function sendSomeData(oldLoan, newLoan, newscheme) {
+  const loan = buildLoanUpdateRequest(oldLoan, newLoan, newscheme);
+  await LoanService.update(loan);
+}
+```
+
+Better
+
+```js
+function buildLoanUpdateRequest(oldLoan, newLoan, newscheme) {
+  const loan = {
+    loan: newLoan,
+    uloans: oldLoan.uloans,
+    newamount: newLoan.newunsecureamount,
+    oldamount: newLoan.oldunsecureamount,
+    oldlploanid: newLoan.lploanid,
+    oldscheme: newLoan.oldschemeid,
+    newscheme: newLoan.newschemeid,
+    newschemeobj: newscheme,
+    pledgecardimage: newLoan.pledgecard,
+    repledgedate: newLoan.newloandate,
+    urepledgehistory: oldLoan.urepledgehistory,
+  };
+
+  if (isSecure(oldLoan)) {
+    Object.assign(loan, {
+      uLoanIds: oldLoan.uLoanIds,
+      unSecureScheme: oldLoan.scheme,
+    });
+  }
+
+  return loan;
+}
+
+async function sendSomeData(oldLoan, newLoan, newscheme) {
+  const loan = buildLoanUpdateRequest(oldLoan, newLoan, newscheme);
+  await LoanService.update(loan);
+}
+```
+
+>“We have far too many ways to interpret past events for our own good.”
+>
+>― Nassim Nicholas Taleb, The Black Swan
+
 ## Functions should do one thing
 
 ## Do one thing at a time
