@@ -419,6 +419,39 @@ printLoanInterestForLenders(loan);
 - Don't exploit guard clauses
 - They should be simple concepts that makes it easier to read and understand the code
 
+Bad:
+
+- Mutation
+- Difficult to read
+- Harder to add more code
+
+```js
+function getCashback() {
+  let result;
+  if (isSecure) {
+    result = getSecureCashback();
+  } else if (isUnsecure) {
+    result = getUnSecureCashback();
+  } else if (isOldScheme) {
+    result = getCashbackForOldScheme();
+  } else {
+    result = getNormalCashback();
+  }
+  return result;
+}
+```
+
+Better
+
+```js
+function getCashback() {
+  if (isSecure) return getSecureCashback();
+  if (isUnsecure) return getUnSecureCashback();
+  if (isOldScheme) return getCashbackForOldScheme();
+  return getNormalCashback();
+}
+```
+
 ## Clever one liners
 
 - Adding code is easy
