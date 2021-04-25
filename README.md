@@ -609,6 +609,10 @@ async function closeLoan(loan) {
 
 ## Comments and Documentation
 
+### Comments
+
+- Use [jsdoc](https://jsdoc.app/)
+
 ### Documentation
 
 - Add stuff your README
@@ -616,6 +620,23 @@ async function closeLoan(loan) {
 - Add setup steps
 - Keep it updated
 - Encourage developers to add
+
+## Dead code
+
+- Adds to complexity
+- Doesn't help with anything
+- You can always look up git history
+- Gives wrong info to someone trying to understand the system
+- You'll have v1 and v2, v2 is basically v1 copied over
+
+## Testing
+
+- How does testing help in improving code quality?
+  1. Understand code, adding tests will help you gather context
+  2. Makes it easier to make improvements to the code (more confident)
+  3. Add test, refactor, repeat
+- Someone else will take a deep dive into testing
+- Will add some references at the end
 
 ## Time
 
@@ -627,28 +648,12 @@ async function closeLoan(loan) {
 - We're all living in each other's paranoia
 - For software engineering it's time
 
-## Testing
-
-- How does testing help in improving code quality?
-  1. Understand code, adding tests will help you gather context
-  2. Makes it easier to make improvements to the code (more confident)
-  3. Add test, refactor, repeat
-- Someone else will take a deep dive into testing
-- Will add some references at the end
-
 ## Scouts Rule
 
 - Leave things better than you found it
 - If there was broken glass pieces on your floor you wouldn't just walk over it
 - You may want to do this but might be afraid to break things
 - Testing will help you be more confident in making these changes
-
-## Dead code
-
-- Adds to complexity
-- Doesn't help with anything
-- You can always look up git history
-- Gives wrong info to someone trying to understand the system
 
 ## Automate
 
@@ -678,7 +683,7 @@ async function closeLoan(loan) {
 
 - Be mindful of the code you write
 - Correctness over speed
-- It takes time, to write clean code
+- It takes time to write clean code
 - Review each others code
 - Don't be afraid to ask questions
 - It's okay to make mistakes
