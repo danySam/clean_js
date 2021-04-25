@@ -5,6 +5,7 @@
 - Not going to spend much time talking about if writing clean code is an art or a skill
 - Some of these are guidelines
 - Some of these are specific to JS, but most can be applied into any language
+- Not going to talk about software architecture, design patterns, complex abstractions
 - Hoping that by the end of the talk you get a feel of what is clean code, how to make code cleaner, etc
 - Myself: Software consultant from nilenso. Been working with Rupeek for over 6 months.
 - The points discussed today are not exhaustive and they are not rules. I am going to addressing some code issues using examples from the services that I have worked with.
@@ -27,7 +28,7 @@
 
 Bad
 
-```javascript
+```js
 const user = [
   { name: 'Alice', age: 30, loans: 2 },
   { name: 'Bob', age: 29, loans: 4 },
@@ -68,6 +69,7 @@ Better
 
 - Searchable
 - Meaningful
+- No mental mapping required
 
 ```js
 const MAX_ELIGIBILITY_AGE = 100;
@@ -99,11 +101,78 @@ const totalLoansOfEligibleUsers = users
   .reduce((total, user) => total + user.loans, 0);
 ```
 
-> variable names, function names, argument names, etc
+Bad
+
+```js
+async function processLoanPayment(loan, sum, lenderId) {
+  await PaymentService.closeLoan(loan.loanId);
+  await CoreService.createNewLoan(sum, lenderId);
+}
+```
+
+The intention here was to run a few cleans on different services after a payment for loan has been done.
+
+Better
+
+```js
+async function runPostLoanPaymentActions(loan, amount) {
+  await PaymentService.closeLoan(loan.loanId);
+  await CoreService.createNewLoan(amount, loan.lenderId);
+}
+```
+
+Even Better
+
+```js
+async function runPostLoanPaymentActions({ loanId, lenderId }, amount) {
+  await PaymentService.closeLoan(loanId);
+  await CoreService.createNewLoan(amount, lenderId);
+}
+```
+
+Bad: Having a lot of arguments
+
+```js
+async function createNewScheme(id, name, loan, oldScheme, interestRate, daysSinceLastPayment, lender, netweight, goldRate) {
+  const goldRate = await fetchGoldRate(lender, goldRate);
+  if (netweight > 0) {
+    // do something
+  }
+  const newSchemeId = await generateSchemeId()
+  // do a lot of other things
+}
+```
 
 ### Uniformity in naming
 
-> Similar to ## Standardization
+- If the same name have different meaning it makes it more difficult to understand the code
+- `get`, `fetch`
+
+Loan implementation example
+
+```js
+const loan = [
+  { id: 1, loanId: 2, netWeight: 23 },
+  { id: 2, loanId: 3, netWeight: 0 }];
+```
+
+Another example
+
+```js
+const loan = [{
+  id: 1,
+  lpLoanId: 2,
+  netWeight: 23,
+  type: 'secure'
+}, {
+  id: 2,
+  lpLoanId: 3,
+  type: 'unsecure'
+}]
+
+```
+
+Although both the loan objects correspond to the same data, they are structured differently. This makes it difficult to understand what to expect when you see a loan object.
 
 ### Don't leave them guessing
 
@@ -112,6 +181,80 @@ const totalLoansOfEligibleUsers = users
 - Functions should do what they say, and only that
 - Variables should encapsulate on concept, it shouldn't mean different things based on context
 - Use variables / functions over predicates that you need context to understand
+
+Bad: This function doesn't give any info to the reader what it does
+
+```js
+function callFunctionInCore() {
+  // does a lot of things
+}
+```
+
+Bad: You have to reverse engineer the logic to understand what's happening here
+
+```js
+function createNewLoan(currentLoan, scheme) {
+  let type = '1:1';
+  if (currentLoan.loans.filter((loan) => loan.netweight > 0).length > 1) {
+    type = 'N:1';
+  }
+  switch (type) {
+    // create loans in different ways
+  }
+}
+```
+
+Better
+
+```js
+const isLoanSecure = (loan) => loan.netweight > 0;
+
+function createNewLoan(currentLoan, scheme) {
+  let type = '1:1';
+  if (currentLoan.loans.filter(isLoanSecure).length > 1) {
+    type = 'N:1';
+  }
+  switch (type) {
+    // create loans in different ways
+  }
+}
+```
+
+Better?
+
+```js
+const isLoanSecure = (loan) => loan.netweight > 0;
+
+const hasManySecureLoans = ({ loans }) => loans.filter(isLoanSecure).length > 1;
+
+function createNewLoan(currentLoan, scheme) {
+  let type = '1:1';
+  if (hasManySecureLoans(currentLoan)) {
+    type = 'N:1';
+  }
+  switch (type) {
+    // create loans in different ways
+  }
+}
+```
+
+Even Better?
+
+```js
+const hasManySecureLoans = ({ loans }) => loans.filter(Loan.isSecure).length > 1;
+
+function createNewLoan(currentLoan, scheme) {
+  let type = '1:1';
+  if (hasManySecureLoans(currentLoan)) {
+    type = 'N:1';
+  }
+  switch (type) {
+    // create loans in different ways
+  }
+}
+```
+
+You can still make this better by moving the code to find the `type` to a different function altogether.
 
 ## Composition
 
@@ -177,7 +320,7 @@ const benchmark = _.get(_.find(scheme.baseSchemes, { type: 'unsecure' }), 'goldB
 
 ## Scouts Rule
 
-- Leave things in a better than you found it
+- Leave things better than you found it
 - If there was broken glass pieces on your floor you wouldn't just walk over it
 - You may want to do this but might be afraid to break things
 - Testing will help you be more confident in making these changes
