@@ -22,9 +22,82 @@
 - Constants
 - Meaningful
 - Explicit
+- Searchable
 - Chose a style, camelCase, snake_case, but stick to it
 
-> examples of refactoring code
+Bad
+
+```javascript
+const user = [
+  { name: 'Alice', age: 30, loans: 2 },
+  { name: 'Bob', age: 29, loans: 4 },
+];
+
+const totalLoans = user.reduce((t, u) => t + u.loans, 0);
+```
+
+Better
+
+- Meaningful names
+- More explicit
+
+```js
+const users = [
+  { name: 'Alice', age: 30, loans: 2 },
+  { name: 'Bob', age: 29, loans: 4 },
+];
+
+const totalLoans = users.reduce((total, user) => total + user.loans, 0);
+```
+
+Bad
+
+```js
+const users = [
+  { name: 'Alice', age: 30, loans: 2 },
+  { name: 'Bob', age: 29, loans: 4 },
+  { name: 'Dragon', age: 1000, loans: 40 },
+];
+
+const totalLoans = users
+  .filter((user) => user.age < 100)
+  .reduce((total, user) => total + user.loans, 0);
+```
+
+Better
+
+- Searchable
+- Meaningful
+
+```js
+const MAX_ELIGIBILITY_AGE = 100;
+
+const users = [
+  { name: 'Alice', age: 30, loans: 2 },
+  { name: 'Bob', age: 29, loans: 4 },
+  { name: 'Dragon', age: 1000, loans: 40 },
+];
+
+const totalLoans = users
+  .filter((user) => user.age < MAX_ELIGIBILITY_AGE)
+  .reduce((total, user) => total + user.loans, 0);
+```
+
+Even Better
+
+```js
+const MAX_ELIGIBILITY_AGE = 100;
+
+const users = [
+  { name: 'Alice', age: 30, loans: 2 },
+  { name: 'Bob', age: 29, loans: 4 },
+  { name: 'Dragon', age: 1000, loans: 40 },
+];
+
+const totalLoansOfEligibleUsers = users
+  .filter((user) => user.age < MAX_ELIGIBILITY_AGE)
+  .reduce((total, user) => total + user.loans, 0);
+```
 
 > variable names, function names, argument names, etc
 
@@ -138,8 +211,7 @@ const benchmark = _.get(_.find(scheme.baseSchemes, { type: 'unsecure' }), 'goldB
 
 - Write tests
 - Enforce linting
-
--
+- Start small
 
 ## Recap
 
@@ -148,3 +220,4 @@ const benchmark = _.get(_.find(scheme.baseSchemes, { type: 'unsecure' }), 'goldB
 - It takes time, to write clean code
 - Review each others code
 - Don't be afraid to ask questions
+- It's okay to make mistakes
