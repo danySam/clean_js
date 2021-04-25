@@ -582,14 +582,40 @@ async function sendSomeData(oldLoan, newLoan, newscheme) {
 >
 >― Nassim Nicholas Taleb, The Black Swan
 
-## Functions should do one thing
-
 ## Do one thing at a time
 
-- Whether it is doing a commit, or writing a function, don't try to do multiple things at a time
+- Whether it is doing a commit, or writing a function
 - Functions shouldn't try to solve 2 problems
 - Your commits should clearly say what you did in that commit. Write descriptive commits
 - Allows you to focus on one things, test it, get it working and not worry about the next thing
+
+```js
+// LoanService.js
+
+async function closeUserLoan(loan) {
+  await LoanModel.closeLoan(loan);
+}
+
+// LoanModel.js
+
+async function closeLoan(loan) {
+  await db.loan.update({ _id: loan.id }, { status: 'closed' });
+  await Notification.send('Loan closed');
+}
+```
+
+- We suck at multi tasking
+- Try to do one thing at a time and do it well
+
+## Comments and Documentation
+
+### Documentation
+
+- Add stuff your README
+- Add requirements
+- Add setup steps
+- Keep it updated
+- Encourage developers to add
 
 ## Time
 
@@ -600,8 +626,6 @@ async function sendSomeData(oldLoan, newLoan, newscheme) {
   - Easier to debug
 - We're all living in each other's paranoia
 - For software engineering it's time
-
-## Comments and Documentation
 
 ## Testing
 
