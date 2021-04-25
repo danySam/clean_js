@@ -256,6 +256,30 @@ function createNewLoan(currentLoan, scheme) {
 
 You can still make this better by moving the code to find the `type` to a different function altogether.
 
+Bad
+
+```js
+if (user.age > 18 && !user.payments.find((payment) => payment.status === 'outstanding') && loans.every((loan) => loan.verified === true)) {
+  // do something
+}
+```
+
+Better
+
+- Easy to understand
+- Plain language
+- Implementation is extracted
+
+```js
+const isAboveLegalAge = user.age > LEGAL_AGE;
+const hasBackPayments = user.payments.find(User.isPaymentOutstanding);
+const loansVerified = loans.every(Loan.isVerified);
+
+if (isAboveLegalAge && !hasBackPayments && loansVerified) {
+  // do something
+}
+```
+
 ## Composition
 
 - Do not repeat
@@ -263,11 +287,72 @@ You can still make this better by moving the code to find the `type` to a differ
 - Easier to test logic
 - Easier to modify
 
+### Duplication
+
+- Difficult to maintain
+- Difficult to introduce changes
+- Easy to miss during refactoring / changing the logic
+- Difficult to test
+
 Example:
 
-``` javascript
+Bad
+
+- Difficult to read
+- Difficult to change this logic
+
+```js
 const benchmark = _.get(_.find(scheme.baseSchemes, { type: 'unsecure' }), 'goldBenchmark', loan.lenderid);
 ```
+
+Better
+
+```js
+function getBenchmarkFromScheme(scheme, loan) {
+  return _.get(_.find(scheme.baseSchemes, { type: 'unsecure' }), 'goldBenchmark', loan.lenderid);
+}
+
+const benchmark = getBenchmarkFromScheme(scheme, loan);
+```
+
+Even Better
+
+```js
+function getBenchmarkFromScheme(scheme, loan) {
+  const unsecureBaseScheme = _.find(scheme.baseSchemes, { type: 'unsecure' });
+  return _.get(unsecureBaseScheme, 'goldBenchmark', loan.lenderid);
+}
+
+const benchmark = getBenchmarkFromScheme(scheme, loan);
+```
+
+Even Better?
+
+```js
+function getBenchmarkFromScheme(scheme, lenderId) {
+  const unsecureBaseScheme = _.find(scheme.baseSchemes, { type: 'unsecure' });
+  return _.get(unsecureBaseScheme, 'goldBenchmark', lenderId);
+}
+
+const benchmark = getBenchmarkFromScheme(scheme, loan.lenderId);
+```
+
+Even Better? Or should we default to passing in `loan`?
+
+```js
+function getBenchmarkFromScheme(scheme, defaultBenchmark) {
+  const unsecureBaseScheme = _.find(scheme.baseSchemes, { type: 'unsecure' });
+  return _.get(unsecureBaseScheme, 'goldBenchmark', defaultBenchmark);
+}
+
+const benchmark = getBenchmarkFromScheme(scheme, loan.lenderId);
+```
+
+- Easy to modify
+- Confidently make changes
+- Easy to search
+
+> Could put this in `Scheme` module and call it `getBenchmark`
 
 ## Mutation
 
