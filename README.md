@@ -284,6 +284,7 @@ if (isAboveLegalAge && !hasBackPayments && loansVerified) {
 
 - Do not repeat
 - Repetition is difficult to maintain
+- Keep max 10 ~ 15 lines
 - Easier to test logic
 - Easier to modify
 
@@ -360,6 +361,56 @@ const benchmark = getBenchmarkFromScheme(scheme, loan.lenderId);
 - Use `const` > `let` >> `var`
 - `var` should be considered deprecated
 - Especially in javascript
+
+Example
+
+```js
+var startTime = new Date();
+
+function getNewStartTime(someCondition) {
+  var starttime = new Date();
+  if (someCondition) {
+    startTime = Date.parse('2021-01-01T20:46:56.875Z');
+  }
+  return starttime
+}
+```
+
+### Pros of immutable code
+
+- You'll be forced to write more composable functions
+- Easier to read
+- More descriptive
+- Concurrency
+- Pure functions
+
+### Mutation in JS
+
+Example
+
+```js
+function getLoanInterestForFederal(loan) {
+  return loan.loanAmount * (loan.interestRate / 100) * loan.tenure;
+}
+
+function getLoanInterestForICICI(loan) {
+  loan.loanAmount *= 1.05;
+  return loan.loanAmount * (loan.interestRate / 100) * loan.tenure;
+}
+
+function printLoanInterestForLenders(loan) {
+  console.log('Federal:', getLoanInterestForFederal(loan));
+  console.log('ICICI:', getLoanInterestForICICI(loan));
+}
+
+const loan = {
+  loanAmount: 100000,
+  interestRate: 5,
+  tenure: 4,
+};
+
+printLoanInterestForLenders(loan);
+```
 
 ## Guard Clauses
 
