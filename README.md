@@ -101,6 +101,8 @@ const totalLoansOfEligibleUsers = users
   .reduce((total, user) => total + user.loans, 0);
 ```
 
+### Not revealing intention
+
 Bad
 
 ```js
@@ -133,9 +135,9 @@ async function runPostLoanPaymentActions({ loanId, lenderId }, amount) {
 Bad: Having a lot of arguments
 
 ```js
-async function createNewScheme(id, name, loan, oldScheme, interestRate, daysSinceLastPayment, lender, netweight, goldRate) {
+async function createNewScheme(id, name, loan, oldScheme, interestRate, daysSinceLastPayment, lender, netWeight, goldRate) {
   const goldRate = await fetchGoldRate(lender, goldRate);
-  if (netweight > 0) {
+  if (netWeight > 0) {
     // do something
   }
   const newSchemeId = await generateSchemeId()
@@ -195,7 +197,7 @@ Bad: You have to reverse engineer the logic to understand what's happening here
 ```js
 function createNewLoan(currentLoan, scheme) {
   let type = '1:1';
-  if (currentLoan.loans.filter((loan) => loan.netweight > 0).length > 1) {
+  if (currentLoan.loans.filter((loan) => loan.netWeight > 0).length > 1) {
     type = 'N:1';
   }
   switch (type) {
@@ -207,7 +209,7 @@ function createNewLoan(currentLoan, scheme) {
 Better
 
 ```js
-const isLoanSecure = (loan) => loan.netweight > 0;
+const isLoanSecure = (loan) => loan.netWeight > 0;
 
 function createNewLoan(currentLoan, scheme) {
   let type = '1:1';
@@ -223,7 +225,7 @@ function createNewLoan(currentLoan, scheme) {
 Better?
 
 ```js
-const isLoanSecure = (loan) => loan.netweight > 0;
+const isLoanSecure = (loan) => loan.netWeight > 0;
 
 const hasManySecureLoans = ({ loans }) => loans.filter(isLoanSecure).length > 1;
 
@@ -383,6 +385,7 @@ function getNewStartTime(someCondition) {
 - More descriptive
 - Concurrency
 - Pure functions
+- Fewer mistakes
 
 ### Mutation in JS
 
