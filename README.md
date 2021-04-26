@@ -648,6 +648,10 @@ async function closeLoan(loan) {
 - We're all living in each other's paranoia
 - For software engineering it's time
 
+![Time vs Cost](assets/time_cost.jpg)
+
+Ref: <https://www.martinfowler.com/articles/is-quality-worth-cost.html>
+
 ## Scouts Rule
 
 - Leave things better than you found it
@@ -687,3 +691,15 @@ async function closeLoan(loan) {
 - Review each others code
 - Don't be afraid to ask questions
 - It's okay to make mistakes
+
+> Any fool can write code that a computer can understand.
+>
+> Good programmers write code that  humans can understand.
+>
+> \- Martin Fowler
+
+## Links
+
+- [clean-code-javascript by Ryan McDermott](https://github.com/ryanmcdermott/clean-code-javascript)
+- [Is quality worth cost](https://www.martinfowler.com/articles/is-quality-worth-cost.html)
+- [Michaela Greiler on Code Reviews](https://podcasts.google.com/feed/aHR0cHM6Ly93d3cuc2UtcmFkaW8ubmV0L2ZlZWQv/episode/aHR0cHM6Ly93d3cuc2UtcmFkaW8ubmV0Lz9wPTM5NzI?sa=X&ved=0CAcQuIEEahcKEwiIi8S-j5vwAhUAAAAAHQAAAAAQBQ)
