@@ -483,18 +483,7 @@ async function sendSomeData(oldLoan, newLoan, newscheme) {
     ...(oldLoan.netWeight > 0 && {
       uLoanIds: oldLoan.uLoanIds,
       unSecureScheme: oldLoan.scheme,
-    }),
-    renewalobj: {
-      ...(newLoan.printerpledgecardimage && {
-        combinedpledgecardimage: newLoan.printerpledgecardimage,
-      }),
-      ...(newLoan.renewalpledgecard && {
-        renewalpledgecard: newLoan.renewalpledgecard,
-      }),
-      ...(newLoan.signedpledgecard && {
-        signedpledgecard: newLoan.signedpledgecard,
-      }),
-    },
+    })
   };
 
   await LoanService.update(loan);
@@ -641,20 +630,6 @@ async function closeLoan(loan) {
 - Someone else will take a deep dive into testing
 - Will add some references at the end
 
-## Time
-
-- Code takes time to write, easier to rewrite
-- Easiest solution is not the best solution. Most of the time it's the worst possible approach
-- Taking time to write good code will save time
-  - Reduce production issues
-  - Easier to debug
-- We're all living in each other's paranoia
-- For software engineering it's time
-
-![Time vs Cost](assets/time_cost.jpg)
-
-Ref: <https://www.martinfowler.com/articles/is-quality-worth-cost.html>
-
 ## Scouts Rule
 
 - Leave things better than you found it
@@ -673,6 +648,20 @@ Ref: <https://www.martinfowler.com/articles/is-quality-worth-cost.html>
 
 - Validation / Coercion should happen at boundaries
 - Naming should be understandable at an org level
+
+## Time
+
+- Code takes time to write, easier to rewrite
+- Easiest solution is not the best solution. Most of the time it's the worst possible approach
+- Taking time to write good code will save time
+  - Reduce production issues
+  - Easier to debug
+- We're all living in each other's paranoia
+- For software engineering it's time
+
+![Time vs Cost](assets/time_cost.jpg)
+
+Ref: <https://www.martinfowler.com/articles/is-quality-worth-cost.html>
 
 ## With freedom comes cost
 
